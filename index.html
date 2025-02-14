@@ -3,18 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Сердце для тебя ❤️</title>
-    <style>
-        body { margin: 0; }
-        canvas { display: block; }
-    </style>
+    <title>Специально для тебя ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+        <style>
+            body {
+                    margin: 0;
+                    background-image: url("background.jpg"); /* Ссылка на изображение */
+                    background-size: cover; /* Растягиваем фон на весь экран */
+                    background-repeat: repeat; /* Повторяем фон, если изображение маленькое */
+                 }
+            canvas { display: block; }
+            /* Стили для текста */
+            .text-overlay1 {
+                position: absolute;
+                top: 2vh;
+                left: 1vw;
+                font-family: 'Lobster', cursive;
+                font-size: 2vw;
+                color: red;
+                z-index: 1;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+                background-color: rgba(255, 255, 255, 0.9);
+                padding: 10px;
+                border-radius: 10px;
+            }
+        </style>
 </head>
 <body>
-    <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.132/build/three.min.js"></script>
-    <script src="https://unpkg.com/three@0.132/examples/jsm/controls/OrbitControls.js"></script>
 
-    <script src="DeviceOrientationControls.js"></script>
-    <script src="main.js"></script>
+    <div class="text-overlay1">❤️ Любимой Пиявке от Вжжжика ❤️</div>
+
+    </div>
+
+    <script type="module">
+    import * as THREE from "https://unpkg.com/three@0.112/build/three.module.js";
+    import { OrbitControls } from "https://unpkg.com/three@0.112/examples/jsm/controls/OrbitControls.js";
+
+    var mesh, renderer, scene, camera, controls;
+
+    init();
+    animate();
+
+    function init() {
+
+        // renderer
+        renderer = new THREE.WebGLRenderer({alpha: true});
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        renderer.setPixelRatio( window.devicePixelRatio );
+        document.body.appendChild( renderer.domElement );
+
+        // scene
+        scene = new THREE.Scene();
+
+        // camera
+        camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+        camera.position.set( 60, 30, 30 );
+
+        // controls
+        controls = new OrbitControls( camera, renderer.domElement );
+
+        // ambient
+        scene.add( new THREE.AmbientLight( 0x222222 ) );
+
+        // light
+        var light = new THREE.DirectionalLight( 0xffffff, 1 );
+        light.position.set( 30, 0, 0 );
+        scene.add( light );
+
+        const x = 0, y = 0;
+
+        const heartShape = new THREE.Shape();
+
+        heartShape.moveTo( x + 5, y + 5 );
+        heartShape.bezierCurveTo( x + 5, y + 5, x + 4, y, x, y );
+        heartShape.bezierCurveTo( x - 6, y, x - 6, y + 7,x - 6, y + 7 );
+        heartShape.bezierCurveTo( x - 6, y + 11, x - 3, y + 15.4, x + 5, y + 19 );
+        heartShape.bezierCurveTo( x + 12, y + 15.4, x + 16, y + 11, x + 16, y + 7 );
+        heartShape.bezierCurveTo( x + 16, y + 7, x + 16, y, x + 10, y );
+        heartShape.bezierCurveTo( x + 7, y, x + 5, y + 5, x + 5, y + 5 );
+
+        // Параметры экструзии
+        const extrudeSettings = {
+            depth: 5, // Глубина экструзии
+            bevelEnabled: true, // Включить скос
+            bevelSegments: 20, // Количество сегментов скоса
+            steps: 10, // Количество шагов экструзии
+            bevelSize: 2, // Размер скоса
+            bevelThickness: 1 // Толщина скоса
+        };
+
+        // Создание геометрии сердца
+        const geometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
+        const material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+
+        // mesh
+        mesh = new THREE.Mesh( geometry, material );
+        scene.add( mesh );
+
+    }
+
+    function animate() {
+
+        //requestAnimationFrame( animate );
+        //controls.update();
+        //renderer.render( scene, camera );
+        requestAnimationFrame(animate);
+        mesh.rotation.x += 0.008;
+        mesh.rotation.y += 0.008;
+        renderer.render(scene, camera);
+
+    }
+
+    window.addEventListener('resize', () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            // Обновляем размеры рендерера
+            renderer.setSize(width, height);
+
+            // Обновляем параметры камеры
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+        });
+
+    </script>
 </body>
 </html>
