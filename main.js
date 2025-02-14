@@ -1,7 +1,4 @@
-// Проверка подключения Three.js
-console.log(THREE);
-
-// Создание сцены, камеры и рендерера
+// Теперь THREE доступен глобально
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
