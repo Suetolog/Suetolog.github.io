@@ -1,5 +1,5 @@
-// Подключение Three.js
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.132/build/three.module.js';
+// Проверка подключения Three.js
+console.log(THREE);
 
 // Создание сцены, камеры и рендерера
 const scene = new THREE.Scene();
@@ -8,16 +8,11 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Создание геометрии сердца
-const heartShape = new THREE.Shape();
-heartShape.moveTo(0, 0);
-heartShape.bezierCurveTo(0, 0.5, 0.5, 1, 0, 1.5);
-heartShape.bezierCurveTo(-0.5, 1, 0, 0.5, 0, 0);
-
-const geometry = new THREE.ShapeGeometry(heartShape);
-const material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });
-const heart = new THREE.Mesh(geometry, material);
-scene.add(heart);
+// Создание сферы (для проверки)
+const geometry = new THREE.SphereGeometry(1, 32, 32);
+const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const sphere = new THREE.Mesh(geometry, material);
+scene.add(sphere);
 
 // Позиция камеры
 camera.position.z = 5;
@@ -25,7 +20,17 @@ camera.position.z = 5;
 // Анимация вращения
 function animate() {
     requestAnimationFrame(animate);
-    heart.rotation.x += 0.01;
-    heart.rotation.y += 0.01;
+    sphere.rotation.x += 0.01;
+    sphere.rotation.y += 0.01;
     renderer.render(scene, camera);
 }
+animate();
+
+// Обработчик изменения размера окна
+window.addEventListener('resize', () => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    renderer.setSize(width, height);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+});
